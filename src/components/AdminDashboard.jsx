@@ -66,28 +66,43 @@ export default function AdminDashboard() {
     setHistoryError(null);
   };
 
-  const handleLogout = ()=>{
-localStorage.clear();
-navigate("/");
-  }
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen p-8 bg-gradient-to-br from-purple-900 via-indigo-800 to-pink-700 text-white font-sans relative">
 
-      {/* Logout button */}
-     <div className="flex justify-end">
-       <button
-        onClick={handleLogout}
-        className="px-4 py-2 bg-pink-600 hover:bg-pink-500rounded-md font-semibold transition shadow-lg cursor-pointer"
-        // title="Logout"
-      >
-        Logout
-      </button>
-     </div>
+      {/* Top bar with Admin Logo and Logout */}
+      <div className="flex justify-between items-center mb-6">
+        {/* Admin Logo */}
+        <div className="flex items-center space-x-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-10 w-10 text-pink-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+            />
+          </svg>
+          <h1 className="text-3xl font-bold">Admin Panel</h1>
+        </div>
 
-      <h1 className="text-5xl font-extrabold mb-10 text-center bg-white/90  bg-clip-text text-transparent drop-shadow-lg">
-        Admin Panel
-      </h1>
+        {/* Logout button */}
+        <button
+          onClick={handleLogout}
+          className="px-4 py-2 bg-pink-600 hover:bg-pink-500 rounded-md font-semibold transition shadow-lg cursor-pointer"
+        >
+          Logout
+        </button>
+      </div>
 
       <div className="flex justify-center mb-10">
         <button
@@ -143,7 +158,7 @@ navigate("/");
       </section>
 
       <section>
-        <h2 className="text-3xl font-semibold mb-4 border-b border-white/30 pb-2">Users and History</h2>
+        <h2 className="text-3xl font-semibold mb-4 border-b border-white/30 pb-2">Members & Quiz Performances</h2>
         {users.length === 0 ? (
           <p className="text-center text-white/80">No users found</p>
         ) : (

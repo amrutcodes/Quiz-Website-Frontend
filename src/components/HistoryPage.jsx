@@ -1,40 +1,66 @@
 import React, { useEffect, useState } from "react";
 
+const Loader = () => (
+  <div className="flex justify-center items-center py-10">
+    <svg
+      className="animate-spin h-10 w-10 text-pink-500"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      aria-label="Loading"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      />
+    </svg>
+  </div>
+);
+
 const HistoryPage = () => {
   const user = localStorage.getItem("USER");
   const userEmail = user ? JSON.parse(user).email : null;
   const [history, setHistory] = useState([]);
   const [selectedAttempt, setSelectedAttempt] = useState(null);
   const [loadingDetails, setLoadingDetails] = useState(false);
+  const [loadingHistory, setLoadingHistory] = useState(false);
   const [error, setError] = useState(null);
-  console.log("userEmail", userEmail);
+
   useEffect(() => {
-  
     if (userEmail) {
+      setLoadingHistory(true);
       fetch(`http://localhost:4000/api/history/get?userEmail=${userEmail}`)
         .then((res) => res.json())
         .then((data) => {
           if (data.success) setHistory(data.data);
-        });
+          setLoadingHistory(false);
+        })
+        .catch(() => setLoadingHistory(false));
     }
   }, [userEmail]);
 
   const viewAttemptDetails = async (historyId) => {
-    console.log("historyId", historyId);
     setLoadingDetails(true);
     setError(null);
     try {
       const res = await fetch(`http://localhost:4000/api/history/getById/${historyId}`);
       const data = await res.json();
-      console.log("data", data);
       if (data.success) {
         setSelectedAttempt(data.data);
       } else {
         setError("Failed to load attempt details");
       }
-    } catch (err){
+    } catch {
       setError("Failed to load attempt details");
-      console.log("err", err);
     }
     setLoadingDetails(false);
   };
@@ -48,7 +74,10 @@ const HistoryPage = () => {
     <div className="bg-gradient-to-br from-purple-900 via-indigo-800 to-pink-700 w-full min-h-screen flex justify-center items-center p-4">
       <div className="w-full max-w-4xl bg-gray-900 p-8 rounded-lg shadow-xl mx-auto">
         <h2 className="text-4xl font-bold mb-6 text-pink-400">Quiz History</h2>
-        {history.length === 0 ? (
+
+        {loadingHistory ? (
+          <Loader />
+        ) : history.length === 0 ? (
           <p className="text-gray-400">No past attempts found.</p>
         ) : (
           <table className="w-full text-left text-white">
@@ -61,7 +90,7 @@ const HistoryPage = () => {
               </tr>
             </thead>
             <tbody>
-              {history.map(({ _id, title, score, totalQuestions, date }, idx) => (
+              {history.map(({ _id, title, score, totalQuestions, date }) => (
                 <tr
                   key={_id}
                   className="border-b border-gray-700 hover:bg-pink-900/30"
@@ -96,7 +125,7 @@ const HistoryPage = () => {
             {error && <p className="text-red-500 mb-4">{error}</p>}
 
             {loadingDetails ? (
-              <p className="text-gray-400">Loading...</p>
+              <Loader />
             ) : (
               <>
                 {selectedAttempt.quizId.questions ? (

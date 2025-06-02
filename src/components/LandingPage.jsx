@@ -67,7 +67,7 @@ export default function LandingPage() {
           transition={{ delay: 0.3 }}
           className="text-lg md:text-xl mb-8 max-w-2xl"
         >
-          Dive into fun and challenging quizzes on Web Development, Python, Java, and more. Track your scores and level up!
+          Engage with interactive quizzes designed to test your knowledge across various topics
         </motion.p>
 
         <motion.div
